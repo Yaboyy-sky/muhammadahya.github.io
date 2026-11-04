@@ -174,11 +174,31 @@
         "Technical & Creative Skills"
       ],
       stats: [
-        { label: "Proyek Selesai", value: 24, suffix: "+" },
-        { label: "Penghargaan Akademik", value: 2, suffix: "" },
-        { label: "Sertifikasi", value: 4, suffix: "" },
-        { label: "Tingkat Kepuasan", value: 99, suffix: "%" }
-      ]
+  {
+    label: "Proyek Selesai",
+    value: 24,
+    suffix: "+",
+    desc: "Kumpulan proyek instrumentasi, IoT, pemrograman, pengembangan teknologi, serta editing foto dan video."
+  },
+  {
+    label: "Penghargaan Akademik",
+    value: 2,
+    suffix: "",
+    desc: "Pencapaian akademik dan prestasi selama menempuh pendidikan."
+  },
+  {
+    label: "Sertifikasi",
+    value: 4,
+    suffix: "",
+    desc: "Dokumentasi sertifikasi dan pelatihan untuk mendukung kompetensi profesional."
+  },
+  {
+    label: "Tingkat Kepuasan",
+    value: 90,
+    suffix: "%",
+    desc: "Komitmen dalam memberikan hasil pekerjaan yang berkualitas melalui ketelitian, tanggung jawab, dan upaya memenuhi kebutuhan setiap proyek."
+  }
+]
     };
 
     const educationHistory = [
@@ -1037,6 +1057,7 @@
     // --- COMPONENT: ABOUT ---
     function About() {
       const [activeTab, setActiveTab] = useState('education');
+      const [hoveredStat, setHoveredStat] = useState(null);
 
       return (
         <section id="about" className="relative py-24 px-4 md:px-8 max-w-6xl mx-auto">
@@ -1107,22 +1128,51 @@
             </div>
           </div>
 
-          {/* Project Statistics with Animated Counter */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-24">
-            {personalInfo.stats.map((stat, idx) => (
-              <div
-                key={idx}
-                className="glass-panel p-5 sm:p-6 rounded-2xl text-center hover:border-emerald-500/50 hover:shadow-[0_0_25px_rgba(16,185,129,0.25)] transition-all duration-300 transform hover:-translate-y-1"
-              >
-                <div className="text-3xl sm:text-4xl md:text-5xl font-black bg-gradient-to-r from-emerald-400 via-teal-300 to-purple-400 bg-clip-text text-transparent mb-2">
-                  <AnimatedCounter endValue={stat.value} suffix={stat.suffix} />
-                </div>
-                <p className="text-xs sm:text-sm text-gray-300 font-medium">
-                  {stat.label}
-                </p>
-              </div>
-            ))}
+          
+{/* Project Statistics with Animated Counter & Tooltip */}
+<div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-24">
+  {personalInfo.stats.map((stat, idx) => {
+    const isHovered = hoveredStat === idx;
+
+    return (
+      <div
+        key={idx}
+        onMouseEnter={() => setHoveredStat(idx)}
+        onMouseLeave={() => setHoveredStat(null)}
+        className="relative glass-panel p-5 sm:p-6 rounded-2xl text-center cursor-pointer hover:border-emerald-500/50 hover:shadow-[0_0_25px_rgba(16,185,129,0.25)] transition-all duration-300 transform hover:-translate-y-1"
+      >
+        <div className="text-3xl sm:text-4xl md:text-5xl font-black bg-gradient-to-r from-emerald-400 via-teal-300 to-purple-400 bg-clip-text text-transparent mb-2">
+          <AnimatedCounter
+            endValue={stat.value}
+            suffix={stat.suffix}
+          />
+        </div>
+
+        <p className="text-xs sm:text-sm text-gray-300 font-medium">
+          {stat.label}
+        </p>
+
+        {/* Tooltip */}
+        {isHovered && (
+          <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 w-52 sm:w-60 p-3 rounded-2xl bg-[#03110a] border border-emerald-400/60 shadow-[0_0_25px_rgba(16,185,129,0.4)] text-left z-30 pointer-events-none animate-fadeIn backdrop-blur-xl">
+            <div className="flex items-center justify-between mb-1">
+              <span className="font-bold text-xs text-white">
+                {stat.label}
+              </span>
+            </div>
+
+            <p className="text-[11px] text-gray-300 leading-snug">
+              {stat.desc}
+            </p>
+
+            <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-[1px] border-8 border-transparent border-t-[#03110a]" />
           </div>
+        )}
+      </div>
+    );
+  })}
+</div>
+
 
           {/* Education vs Experience Tabs */}
           <div className="mb-10 flex justify-center">
