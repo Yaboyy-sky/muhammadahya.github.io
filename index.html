@@ -255,6 +255,33 @@
       }
     ];
 
+    const organizationHistory = [
+      {
+        period: "Maret 2025 – Desember 2025",
+        role: "Dewan Perwakilan Mahasiswa (Legislatif) – Komisi 2: Anggaran dan Pengawasan",
+        company: "Dewan Perwakilan Mahasiswa FMIPA ULM",
+        location: "Banjarbaru, Indonesia",
+        description: "Mengawasi dan mengevaluasi pelaksanaan kebijakan serta alokasi anggaran pada 12 Ormawa di lingkungan FMIPA. Menganalisis laporan keuangan dan dokumen anggaran BEM FMIPA ULM pada aspek transparansi, akuntabilitas, dan kewajaran penggunaan dana, serta menyusun rekomendasi perbaikan pengelolaan kebijakan dan anggaran berdasarkan hasil evaluasi.",
+        tags: ["Legislatif", "Pengawasan", "AnalisisAnggaran", "Akuntabilitas"]
+      },
+      {
+        period: "Maret 2024 – Desember 2024",
+        role: "Ketua Himpunan",
+        company: "Himpunan Mahasiswa Fisika",
+        location: "Banjarbaru, Indonesia",
+        description: "Memimpin 35+ anggota dan 9 pengurus inti dalam merencanakan serta menjalankan program kerja tahunan himpunan. Merancang strategi dan menyusun kerangka pengembangan organisasi melalui program kerja di bidang keilmuan, akademik, sosial, olahraga, dan kerohanian. Menjadi penghubung antara mahasiswa Fisika, FMIPA ULM, dan pihak eksternal, serta mengelola dinamika internal dan menyelesaikan permasalahan organisasi.",
+        tags: ["Leadership", "OrganizationalDevelopment", "Teamwork", "ProblemSolving"]
+      },
+      {
+        period: "Februari 2024 – November 2024",
+        role: "Koordinator Komunikasi dan Perhubungan",
+        company: "Abdi Daya Ormawa",
+        location: "Bali, Indonesia",
+        description: "Mengelola perizinan dan koordinasi birokrasi dengan pihak universitas dan pemerintah daerah, mulai dari tahap proposal hingga pelaksanaan program lapangan. Memimpin komunikasi dan koordinasi dengan 5+ pemangku kepentingan serta mengatasi kendala administratif. Berkontribusi mengantarkan tim lolos pendanaan nasional dari 2.289 subproposal dan menjadi satu-satunya tim ULM yang tampil di Abdidaya PPK Ormawa 2024 Bali.",
+        tags: ["Koordinasi", "Birokrasi", "StakeholderManagement", "ProjectCoordination"]
+      }
+    ];
+
     const projectsData = [
       {
         id: 1,
@@ -1176,7 +1203,7 @@
 
           {/* Education vs Experience Tabs */}
           <div className="mb-10 flex justify-center">
-            <div className="inline-flex p-1.5 rounded-2xl bg-[#04120c]/80 border border-emerald-500/25 backdrop-blur-md">
+            <div className="inline-flex flex-wrap justify-center gap-1 p-1.5 rounded-2xl bg-[#04120c]/80 border border-emerald-500/25 backdrop-blur-md">
               <button
                 onClick={() => setActiveTab('education')}
                 className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 ${
@@ -1197,6 +1224,16 @@
                 }`}
               >
                 <span>💼 Pengalaman Kerja</span>
+              </button>
+              <button
+                onClick={() => setActiveTab('organization')}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 ${
+                  activeTab === 'organization'
+                    ? 'bg-gradient-to-r from-teal-500 to-cyan-600 text-white shadow-[0_0_15px_rgba(6,182,212,0.4)]'
+                    : 'text-gray-400 hover:text-cyan-300'
+                }`}
+              >
+                <span>🤝 Pengalaman Organisasi</span>
               </button>
             </div>
           </div>
@@ -1275,6 +1312,49 @@
                           <span
                             key={tIdx}
                             className="px-2.5 py-1 rounded-lg bg-forest-900/70 border border-emerald-500/20 text-[11px] font-mono text-emerald-300"
+                          >
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            {activeTab === 'organization' && (
+              <div className="relative border-l-2 border-cyan-500/30 ml-4 sm:ml-8 pl-6 sm:pl-10 space-y-12">
+                {organizationHistory.map((item, index) => (
+                  <div key={index} className="relative group">
+                    <div className="absolute -left-[31px] sm:-left-[47px] top-1.5 w-6 h-6 rounded-full bg-[#030d08] border-2 border-cyan-400 flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.6)] group-hover:scale-125 transition-transform duration-300">
+                      <div className="w-2.5 h-2.5 rounded-full bg-cyan-400" />
+                    </div>
+
+                    <div className="glass-panel p-6 rounded-2xl hover:border-cyan-400/40 transition-all duration-300">
+                      <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/15 text-cyan-300 text-xs font-semibold border border-cyan-500/30">
+                          📅 {item.period}
+                        </span>
+                        <span className="text-xs text-gray-400 flex items-center gap-1">
+                          📍 {item.location}
+                        </span>
+                      </div>
+
+                      <h4 className="text-lg sm:text-xl font-bold text-white mb-1">
+                        {item.role}
+                      </h4>
+                      <p className="text-cyan-300 text-sm font-medium mb-3">
+                        {item.company}
+                      </p>
+                      <p className="text-gray-300 text-sm leading-relaxed mb-4">
+                        {item.description}
+                      </p>
+
+                      <div className="flex flex-wrap gap-2">
+                        {item.tags.map((tag, tIdx) => (
+                          <span
+                            key={tIdx}
+                            className="px-2.5 py-1 rounded-lg bg-forest-900/70 border border-cyan-500/20 text-[11px] font-mono text-cyan-300"
                           >
                             #{tag}
                           </span>
