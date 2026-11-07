@@ -184,6 +184,7 @@
     label: "Penghargaan Akademik",
     value: 2,
     suffix: "",
+    action: "awards", 
     desc: "Pencapaian akademik dan prestasi selama menempuh pendidikan."
   },
   {
@@ -279,6 +280,29 @@
         location: "Bali, Indonesia",
         description: "Mengelola perizinan dan koordinasi birokrasi dengan pihak universitas dan pemerintah daerah, mulai dari tahap proposal hingga pelaksanaan program lapangan. Memimpin komunikasi dan koordinasi dengan 5+ pemangku kepentingan serta mengatasi kendala administratif. Berkontribusi mengantarkan tim lolos pendanaan nasional dari 2.289 subproposal dan menjadi satu-satunya tim ULM yang tampil di Abdidaya PPK Ormawa 2024 Bali.",
         tags: ["Koordinasi", "Birokrasi", "StakeholderManagement", "ProjectCoordination"]
+      }
+    ];
+
+    const awardsData = [
+      {
+        id: "award-1",
+        shortTitle: "🏅 Best Internship graduate at MWM",
+        title: "Best Graduate – Internship",
+        event: "Internship di PT Adaro Indonesia",
+        description: "Penghargaan lulusan terbaik peserta magang di PT Adaro Indoensia section MWM.",
+        photos: [
+          { src: "https://lh3.googleusercontent.com/d/19G_Z7JuOrMJ91AVR6uwivr611kv9VrdB", caption: "Penyerahan plakat" },
+        ]
+      },
+      {
+        id: "award-2",
+        shortTitle: "🏅Top 4 Student Organization PPK 2024",
+        title: "Top 4 – PPKO 2024",
+        event: "Program Penguatan Kapasitas Organisasi Kemahasiswaan",
+        description: "Top 4 dalam kategori inovasi teknologi dan sosial pada PPKO 2024.",
+        photos: [
+          { src: "https://lh3.googleusercontent.com/d/17-kJj1h9HDvNOLWoWbDwWJGXblPbBXUe", caption: "Foto bersama" },
+        ]
       }
     ];
 
@@ -1081,13 +1105,155 @@
       );
     }
 
+    // --- COMPONENT: AWARDS GALLERY MODAL ---
+    function AwardsModal({ onClose }) {
+      const [awardIdx, setAwardIdx] = useState(0);
+      const [photoIdx, setPhotoIdx] = useState(0);
+      const award = awardsData[awardIdx];
+      const photos = award.photos;
+      const total = photos.length;
+
+      const next = () => total && setPhotoIdx((i) => (i + 1) % total);
+      const prev = () => total && setPhotoIdx((i) => (i - 1 + total) % total);
+      const pickAward = (i) => { setAwardIdx(i); setPhotoIdx(0); };
+
+      useEffect(() => {
+        const onKey = (e) => {
+          if (e.key === 'Escape') onClose();
+          if (e.key === 'ArrowRight') next();
+          if (e.key === 'ArrowLeft') prev();
+        };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+      }, [awardIdx, total]);
+
+      // Kunci scroll halaman saat modal terbuka
+      useEffect(() => {
+        const old = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        return () => { document.body.style.overflow = old; };
+      }, []);
+
+      return (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn"
+          onClick={onClose}
+        >
+          <div
+            className="relative w-full max-w-3xl max-h-[92vh] overflow-y-auto bg-[#04140d] border border-emerald-500/40 rounded-3xl p-5 sm:p-7 shadow-[0_0_50px_rgba(16,185,129,0.3)]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-2 bg-gradient-to-r from-emerald-500 via-teal-400 to-purple-600 rounded-b-full shadow-[0_0_20px_#10b981]" />
+
+            <button
+              onClick={onClose}
+              className="absolute top-5 right-5 p-2 rounded-full bg-emerald-950/60 border border-emerald-500/30 text-gray-300 hover:text-white hover:border-emerald-400 transition-colors focus:outline-none z-10"
+              aria-label="Tutup"
+            >
+              ✕
+            </button>
+
+            <h3 className="text-lg sm:text-xl font-bold text-white mb-4 pr-10">
+              🏆 Dokumentasi <span className="aurora-gradient-text">Penghargaan Akademik</span>
+            </h3>
+
+            {/* Tab per penghargaan */}
+            <div className="flex flex-wrap gap-2 mb-5">
+              {awardsData.map((a, i) => (
+                <button
+                  key={a.id}
+                  onClick={() => pickAward(i)}
+                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 ${
+                    awardIdx === i
+                      ? 'bg-gradient-to-r from-emerald-500 to-purple-600 text-white shadow-[0_0_15px_rgba(16,185,129,0.4)]'
+                      : 'bg-forest-900/60 text-gray-400 border border-emerald-500/20 hover:text-emerald-300'
+                  }`}
+                >
+                  {a.shortTitle}
+                </button>
+              ))}
+            </div>
+
+            {/* Foto utama */}
+            <div className="relative rounded-2xl overflow-hidden border border-emerald-500/25 bg-black/40 aspect-[4/3] sm:aspect-video flex items-center justify-center">
+              {total > 0 ? (
+                <img
+                  key={photos[photoIdx].src}
+                  src={photos[photoIdx].src}
+                  alt={photos[photoIdx].caption}
+                  className="w-full h-full object-contain animate-fadeIn"
+                />
+              ) : (
+                <p className="text-sm text-gray-400">📷 Dokumentasi segera ditambahkan</p>
+              )}
+
+              {total > 1 && (
+                <>
+                  <button
+                    onClick={prev}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 border border-emerald-400/40 text-emerald-300 hover:bg-emerald-500/30 transition-colors"
+                    aria-label="Foto sebelumnya"
+                  >
+                    ‹
+                  </button>
+                  <button
+                    onClick={next}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 border border-emerald-400/40 text-emerald-300 hover:bg-emerald-500/30 transition-colors"
+                    aria-label="Foto berikutnya"
+                  >
+                    ›
+                  </button>
+                  <span className="absolute bottom-3 right-3 px-2.5 py-1 rounded-full bg-black/70 border border-emerald-400/30 text-[11px] font-mono text-emerald-300">
+                    {photoIdx + 1} / {total}
+                  </span>
+                </>
+              )}
+            </div>
+
+            {total > 0 && (
+              <p className="mt-3 text-xs text-gray-400 italic text-center">
+                {photos[photoIdx].caption}
+              </p>
+            )}
+
+            {/* Thumbnail */}
+            {total > 1 && (
+              <div className="flex gap-2 mt-4 overflow-x-auto pb-1">
+                {photos.map((p, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setPhotoIdx(i)}
+                    className={`shrink-0 w-20 h-14 rounded-lg overflow-hidden border-2 transition-all ${
+                      photoIdx === i
+                        ? 'border-emerald-400 shadow-[0_0_12px_rgba(16,185,129,0.5)]'
+                        : 'border-transparent opacity-60 hover:opacity-100'
+                    }`}
+                  >
+                    <img src={p.src} alt="" className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Info penghargaan */}
+            <div className="mt-5 pt-4 border-t border-emerald-900/40">
+              <p className="text-xs font-semibold text-purple-400 mb-1">{award.event}</p>
+              <h4 className="text-base sm:text-lg font-bold text-white mb-2">{award.title}</h4>
+              <p className="text-sm text-gray-300 leading-relaxed">{award.description}</p>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     // --- COMPONENT: ABOUT ---
     function About() {
       const [activeTab, setActiveTab] = useState('education');
       const [hoveredStat, setHoveredStat] = useState(null);
+      const [showAwards, setShowAwards] = useState(false);
 
       return (
-        <section id="about" className="relative py-24 px-4 md:px-8 max-w-6xl mx-auto">
+        <section id="about" className="relative py-24 px-4 md:px-8 max-w-6xl mx-auto">{showAwards && <AwardsModal onClose={() => setShowAwards(false)} />}
           {/* Header */}
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#05140d]/60 border border-emerald-500/30 text-emerald-300 text-xs font-medium mb-3 backdrop-blur-sm">
@@ -1166,6 +1332,7 @@
         key={idx}
         onMouseEnter={() => setHoveredStat(idx)}
         onMouseLeave={() => setHoveredStat(null)}
+        onClick={() => stat.action === 'awards' && setShowAwards(true)}
         className="relative glass-panel p-5 sm:p-6 rounded-2xl text-center cursor-pointer hover:border-emerald-500/50 hover:shadow-[0_0_25px_rgba(16,185,129,0.25)] transition-all duration-300 transform hover:-translate-y-1"
       >
         <div className="text-3xl sm:text-4xl md:text-5xl font-black bg-gradient-to-r from-emerald-400 via-teal-300 to-purple-400 bg-clip-text text-transparent mb-2">
@@ -1178,6 +1345,9 @@
         <p className="text-xs sm:text-sm text-gray-300 font-medium">
           {stat.label}
         </p>
+          {stat.action === 'awards' && (
+        <p className="mt-2 text-[10px] text-purple-300 font-medium">📸 Klik untuk lihat dokumentasi</p>
+        )}
 
         {/* Tooltip */}
         {isHovered && (
